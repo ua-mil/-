@@ -10,11 +10,9 @@ function login() {
         currentUserEmail = email;
         localStorage.setItem('currentUser', email);
 
-        // Загрузка данных пользователя
         loadPortfolioData();
         document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${email}!`;
 
-        // Переход на главную страницу
         document.getElementById('login').classList.add('hidden');
         document.getElementById('portfolioPage').classList.remove('hidden');
 
@@ -42,8 +40,8 @@ function loadPortfolioData() {
 
     const portfolioData = JSON.parse(localStorage.getItem(`portfolio_${currentUserEmail}`));
     if (portfolioData) {
-        document.getElementById('btcQuantity').value = portfolioData.btcQuantity;
-        document.getElementById('btcPurchasePrice').value = portfolioData.btcPurchasePrice;
+        document.getElementById('btcQuantity').value = portfolioData.btcQuantity || '';
+        document.getElementById('btcPurchasePrice').value = portfolioData.btcPurchasePrice || '';
 
         fetchBitcoinPrice();
     }
@@ -119,6 +117,15 @@ function updatePortfolioCalculations(currentPrice) {
 
     document.getElementById('btcTotal').textContent = `$${totalValue.toFixed(2)}`;
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
+}
+
+// Калькулятор
+function calculateBTC() {
+    const quantity = parseFloat(document.getElementById('calcQuantity').value) || 0;
+    const price = parseFloat(document.getElementById('calcPrice').value) || 0;
+    const total = quantity * price;
+
+    document.getElementById('calcResult').textContent = `Общая стоимость: $${total.toFixed(2)}`;
 }
 
 // Инициализация
