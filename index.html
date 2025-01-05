@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Криптовалютный Портфель и Калькулятор</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,6 +14,10 @@
 
     <main>
         <!-- Раздел профиля -->
+        <section id="chartSection">
+            <h2>График цены Bitcoin</h2>
+            <canvas id="btcChart" width="400" height="200"></canvas>
+        </section>
         <section id="profile">
             <h2>Создайте свой профиль</h2>
             <div>
