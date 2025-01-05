@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Криптовалютный Портфель и Калькулятор</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Криптовалютный Портфель</h1>
+    </header>
 
+    <main>
+        <!-- Раздел профиля -->
+        <section id="profile">
+            <h2>Создайте свой профиль</h2>
+            <div>
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" placeholder="Введите имя">
+            </div>
+            <button onclick="saveProfile()">Сохранить профиль</button>
+            <p id="welcomeMessage"></p>
+        </section>
+
+        <!-- Раздел портфеля -->
+        <section id="portfolio">
+            <h2>Мой Портфель</h2>
+            <div class="vertical-table">
+            <div>
+                <label for="btcQuantity">Количество BTC:</label>
+                <input type="number" id="btcQuantity" step="0.01">
+            </div>
+            <div>
+                <label for="btcPurchasePrice">Цена покупки (USD):</label>
+                <input type="number" id="btcPurchasePrice">
+            </div>
+            <div>
+                <label>Текущая цена (USD):</label>
+            <p id="btcCurrentPrice">Загрузка...</p>
+            </div>
+            <div>
+                <label>Общая стоимость (USD):</label>
+            <p id="btcTotal">0</p>
+            </div>
+            <div>
+                <label>Прибыль/Убыток (USD):</label>
+            <p id="btcProfit">0</p>
+            </div>
+            </div>
+            <button onclick="fetchBitcoinPrice()">Обновить данные</button>
+        </section>
+
+        <!-- Калькулятор Биткойн -->
+        <section id="calculator" style="display: none;">
+            <h2>Калькулятор Биткойн</h2>
+            <div>
+                <label for="calcQuantity">Количество BTC:</label>
+                <input type="number" id="calcQuantity" placeholder="Введите количество">
+            </div>
+            <div>
+                <label for="calcPrice">Текущая цена (USD):</label>
+                <input type="number" id="calcPrice" placeholder="Введите текущую цену">
+            </div>
+            <button onclick="calculateBTC()">Рассчитать</button>
+            <p id="calcResult">Общая стоимость: $0</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Криптовалютный Портфель</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
