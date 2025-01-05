@@ -13,7 +13,6 @@ function saveProfile() {
         document.getElementById('profile').classList.add('hidden');
         document.getElementById('portfolioPage').classList.remove('hidden');
 
-        // Загружаем данные
         fetchBitcoinPrice();
         loadChartData();
     } else {
@@ -31,9 +30,30 @@ function loadProfile() {
 
         fetchBitcoinPrice();
         loadChartData();
+        loadPortfolioData();
     } else {
         document.getElementById('profile').classList.remove('hidden');
         document.getElementById('portfolioPage').classList.add('hidden');
+    }
+}
+
+// Сохранение данных портфеля
+function savePortfolioData() {
+    const btcQuantity = document.getElementById('btcQuantity').value || '';
+    const btcPurchasePrice = document.getElementById('btcPurchasePrice').value || '';
+
+    const portfolioData = { btcQuantity, btcPurchasePrice };
+    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+}
+
+// Загрузка данных портфеля
+function loadPortfolioData() {
+    const portfolioData = JSON.parse(localStorage.getItem('portfolioData'));
+    if (portfolioData) {
+        document.getElementById('btcQuantity').value = portfolioData.btcQuantity;
+        document.getElementById('btcPurchasePrice').value = portfolioData.btcPurchasePrice;
+
+        fetchBitcoinPrice();
     }
 }
 
