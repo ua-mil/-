@@ -27,6 +27,86 @@ function loadProfile() {
         loadPortfolio();
     }
 }
+const CHART_API_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24';
+
+// Настройка графика
+const ctx = document.getElementById('btcChart').getContext('2d');
+let btcChart;
+
+// Функция для загрузки данных и отображения графика
+async function loadChartData() {
+    try {
+        const response = await fetch(CHART_API_URL);
+
+        if (!response.ok) {
+            throw new Error(`Ошибка API Binance: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Подготавливаем данные для графика
+        const labels = data.map(item => {
+            const date = new Date(item[0]);
+            return `${date.getHours()}:00`;
+        });
+
+        const prices = data.map(item => parseFloat(item[4])); // Закрытие цены
+
+        // Создаем график
+        if (btcChart) {
+            btcChart.destroy();
+        }
+
+        btcChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Цена BTC (USD)',
+                    data: prices,
+                    borderColor: '#ffd700',
+                    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                    tension: 0.2,
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#f9f9f9',
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#f9f9f9',
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#f9f9f9',
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки данных для графика:', error);
+    }
+}
+
+// Загружаем данные графика при загрузке страницы
+window.onload = () => {
+    fetchBitcoinPrice(); // Обновляем цену
+    loadChartData(); // Загружаем график
+
+    // Автообновление каждые 60 секунд
+    setInterval(loadChartData, 60000);
+};
 
 // Получение текущей цены Биткойна
 // URL API Binance для получения текущей цены BTC/USDT
