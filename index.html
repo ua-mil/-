@@ -18,15 +18,29 @@
             <h2>График цены Bitcoin</h2>
             <canvas id="btcChart" width="400" height="200"></canvas>
         </section>
-        <section id="profile">
+        <section id="profile" class="hidden">
             <h2>Создайте свой профиль</h2>
             <div>
                 <label for="username">Имя пользователя:</label>
                 <input type="text" id="username" placeholder="Введите имя">
             </div>
             <button onclick="saveProfile()">Сохранить профиль</button>
-            <p id="welcomeMessage"></p>
         </section>
+
+    <main id="portfolioPage" class="hidden">
+        <section id="chartSection">
+            <h2>График цены Bitcoin</h2>
+            <canvas id="btcChart" width="400" height="200"></canvas>
+        </section>
+        <section id="portfolio">
+            <h2>Мой Портфель</h2>
+            <!-- Портфельный контент -->
+        </section>
+        <section id="calculator">
+            <h2>Калькулятор Биткойн</h2>
+            <!-- Калькуляторный контент -->
+        </section>
+    </main>
 
         <!-- Раздел портфеля -->
         <section id="portfolio">
