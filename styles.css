@@ -1,123 +1,65 @@
-/* Общие стили */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: #fff;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #121212, #1f1f1f);
-    color: #e0e0e0;
 }
 
 header {
-    background-color: #0d0d0d;
-    color: #f9f9f9;
-    text-align: center;
+    background-color: #252540;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-header h1 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-footer {
     text-align: center;
-    margin-top: 20px;
-    padding: 15px 0;
-    background-color: #0d0d0d;
-    color: #f9f9f9;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h1, h2 {
+    margin: 0;
+    color: #ffd700;
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    background-color: #2e2e4a;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #ffd700;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e6c200;
 }
 
 .hidden {
     display: none;
 }
 
-/* Стили для секций */
-section {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #ffc107;
-}
-
-/* Вертикальная таблица */
-.vertical-table {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-}
-
 .vertical-table div {
-    display: flex;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
 }
 
-.vertical-table label {
-    font-weight: bold;
+label {
+    display: block;
     margin-bottom: 5px;
-    color: #ffc107;
 }
 
-.vertical-table input {
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+input {
+    width: 100%;
+    padding: 8px;
     border-radius: 5px;
-    color: #e0e0e0;
-}
-
-/* Кнопки */
-button {
-    background-color: #ffc107;
-    color: #121212;
     border: none;
-    padding: 10px 20px;
-    margin-top: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 25px;
-    transition: transform 0.2s, background-color 0.3s;
+    box-sizing: border-box;
 }
 
-button:hover {
-    background-color: #ffca28;
-    transform: scale(1.05);
-}
-
-/* Результаты */
-p {
-    margin-top: 15px;
-    font-size: 1rem;
-    color: #e0e0e0;
-}
-
-/* Адаптация для мобильных устройств */
-@media (max-width: 768px) {
-    .vertical-table input {
-        font-size: 0.9rem;
-        padding: 8px;
-    }
-
-    button {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #252540;
 }
