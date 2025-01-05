@@ -1,54 +1,46 @@
 const CHART_API_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24';
 const ctx = document.getElementById('btcChart').getContext('2d');
 let btcChart;
+let currentUserEmail = null;
 
-// Сохранение профиля
-function saveProfile() {
-    const username = document.getElementById('username').value.trim();
-    if (username) {
-        localStorage.setItem('username', username);
-        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
+// Вход пользователя
+function login() {
+    const email = document.getElementById('email').value.trim();
+    if (email) {
+        currentUserEmail = email;
+        localStorage.setItem('currentUser', email);
+
+        // Загрузка данных пользователя
+        loadPortfolioData();
+        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${email}!`;
 
         // Переход на главную страницу
-        document.getElementById('profile').classList.add('hidden');
+        document.getElementById('login').classList.add('hidden');
         document.getElementById('portfolioPage').classList.remove('hidden');
 
         fetchBitcoinPrice();
         loadChartData();
     } else {
-        alert('Введите имя пользователя.');
-    }
-}
-
-// Загрузка профиля
-function loadProfile() {
-    const username = localStorage.getItem('username');
-    if (username) {
-        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
-        document.getElementById('profile').classList.add('hidden');
-        document.getElementById('portfolioPage').classList.remove('hidden');
-
-        fetchBitcoinPrice();
-        loadChartData();
-        loadPortfolioData();
-    } else {
-        document.getElementById('profile').classList.remove('hidden');
-        document.getElementById('portfolioPage').classList.add('hidden');
+        alert('Введите корректный email.');
     }
 }
 
 // Сохранение данных портфеля
 function savePortfolioData() {
+    if (!currentUserEmail) return;
+
     const btcQuantity = document.getElementById('btcQuantity').value || '';
     const btcPurchasePrice = document.getElementById('btcPurchasePrice').value || '';
 
     const portfolioData = { btcQuantity, btcPurchasePrice };
-    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+    localStorage.setItem(`portfolio_${currentUserEmail}`, JSON.stringify(portfolioData));
 }
 
 // Загрузка данных портфеля
 function loadPortfolioData() {
-    const portfolioData = JSON.parse(localStorage.getItem('portfolioData'));
+    if (!currentUserEmail) return;
+
+    const portfolioData = JSON.parse(localStorage.getItem(`portfolio_${currentUserEmail}`));
     if (portfolioData) {
         document.getElementById('btcQuantity').value = portfolioData.btcQuantity;
         document.getElementById('btcPurchasePrice').value = portfolioData.btcPurchasePrice;
@@ -129,18 +121,22 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 }
 
-// Калькулятор Bitcoin
-function calculateBTC() {
-    const quantity = parseFloat(document.getElementById('calcQuantity').value) || 0;
-    const price = parseFloat(document.getElementById('calcPrice').value) || 0;
-    const total = quantity * price;
-
-    document.getElementById('calcResult').textContent = `Общая стоимость: $${total.toFixed(2)}`;
-}
-
 // Инициализация
 window.onload = () => {
-    loadProfile();
+    currentUserEmail = localStorage.getItem('currentUser');
+    if (currentUserEmail) {
+        loadPortfolioData();
+        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${currentUserEmail}!`;
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('portfolioPage').classList.remove('hidden');
+
+        fetchBitcoinPrice();
+        loadChartData();
+    } else {
+        document.getElementById('login').classList.remove('hidden');
+        document.getElementById('portfolioPage').classList.add('hidden');
+    }
+
     setInterval(fetchBitcoinPrice, 60000);
     setInterval(loadChartData, 60000);
 };
