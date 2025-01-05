@@ -13,14 +13,14 @@
         <p id="welcomeMessage"></p>
     </header>
 
-    <!-- Блок профиля -->
-    <section id="profile" class="hidden">
-        <h2>Создайте свой профиль</h2>
+    <!-- Форма входа -->
+    <section id="login" class="hidden">
+        <h2>Вход на сайт</h2>
         <div>
-            <label for="username">Имя пользователя:</label>
-            <input type="text" id="username" placeholder="Введите имя">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Введите email">
         </div>
-        <button onclick="saveProfile()">Сохранить профиль</button>
+        <button onclick="login()">Войти</button>
     </section>
 
     <!-- Основная страница -->
@@ -55,20 +55,6 @@
                 </div>
             </div>
             <button onclick="fetchBitcoinPrice()">Обновить данные</button>
-        </section>
-
-        <section id="calculator">
-            <h2>Калькулятор Биткойн</h2>
-            <div>
-                <label for="calcQuantity">Количество BTC:</label>
-                <input type="number" id="calcQuantity" placeholder="Введите количество">
-            </div>
-            <div>
-                <label for="calcPrice">Текущая цена (USD):</label>
-                <input type="number" id="calcPrice" placeholder="Введите текущую цену">
-            </div>
-            <button onclick="calculateBTC()">Рассчитать</button>
-            <p id="calcResult">Общая стоимость: $0</p>
         </section>
     </main>
 
