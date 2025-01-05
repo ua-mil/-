@@ -12,23 +12,29 @@
         <h1>Криптовалютный Портфель</h1>
     </header>
 
-    <!-- Страница входа -->
-    <section id="login">
-        <h2>Вход</h2>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Введите ваш email">
-        </div>
-        <button onclick="login()">Войти</button>
-    </section>
+    <main>
+        <!-- Логин -->
+        <section id="login">
+            <h2>Вход</h2>
+            <div>
+                <label for="email">Введите ваш Email:</label>
+                <input type="email" id="email" placeholder="example@domain.com" required>
+            </div>
+            <button onclick="login()">Войти</button>
+        </section>
 
-    <!-- Страница портфеля -->
-    <section id="portfolioPage" class="hidden">
-        <h2>Мой Портфель</h2>
-        <div class="vertical-table">
+        <!-- График -->
+        <section id="chartSection" class="hidden">
+            <h2>График цены Bitcoin</h2>
+            <canvas id="btcChart" width="400" height="200"></canvas>
+        </section>
+
+        <!-- Портфель -->
+        <section id="portfolioPage" class="hidden">
+            <h2>Мой Портфель</h2>
             <div>
                 <label for="btcQuantity">Количество BTC:</label>
-                <input type="number" id="btcQuantity" step="0.01">
+                <input type="number" id="btcQuantity">
             </div>
             <div>
                 <label for="btcPurchasePrice">Цена покупки (USD):</label>
@@ -46,31 +52,28 @@
                 <label>Прибыль/Убыток (USD):</label>
                 <p id="btcProfit">0</p>
             </div>
-        </div>
-        <button onclick="savePortfolioEntry()">Сохранить данные</button>
-        <button onclick="fetchBitcoinPrice()">Обновить данные</button>
-
-        <!-- Общий доход -->
-        <h3>Общий Доход</h3>
-        <p id="totalProfit">0 USD</p>
-
-        <!-- График -->
-        <h3>График цены Bitcoin</h3>
-        <canvas id="btcChart" width="400" height="200"></canvas>
+            <div>
+                <label>Общий доход (USD):</label>
+                <p id="totalProfit">0</p>
+            </div>
+            <button onclick="savePortfolioEntry()">Сохранить данные</button>
+        </section>
 
         <!-- Калькулятор -->
-        <h3>Калькулятор Bitcoin</h3>
-        <div>
-            <label for="calcQuantity">Количество BTC:</label>
-            <input type="number" id="calcQuantity" placeholder="Введите количество">
-        </div>
-        <div>
-            <label for="calcPrice">Текущая цена (USD):</label>
-            <input type="number" id="calcPrice" placeholder="Введите текущую цену">
-        </div>
-        <button onclick="calculateBTC()">Рассчитать</button>
-        <p id="calcResult">Общая стоимость: $0</p>
-    </section>
+        <section id="calculatorPage" class="hidden">
+            <h2>Калькулятор Bitcoin</h2>
+            <div>
+                <label for="calcQuantity">Количество BTC:</label>
+                <input type="number" id="calcQuantity">
+            </div>
+            <div>
+                <label for="calcPrice">Текущая цена (USD):</label>
+                <input type="number" id="calcPrice">
+            </div>
+            <button onclick="calculateBTC()">Рассчитать</button>
+            <p id="calcResult">Общая стоимость: $0</p>
+        </section>
+    </main>
 
     <footer>
         <p>© 2025 Криптовалютный Портфель</p>
