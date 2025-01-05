@@ -56,6 +56,21 @@
             </div>
             <button onclick="fetchBitcoinPrice()">Обновить данные</button>
         </section>
+
+        <!-- Калькулятор -->
+        <section id="calculator">
+            <h2>Калькулятор Биткойн</h2>
+            <div>
+                <label for="calcQuantity">Количество BTC:</label>
+                <input type="number" id="calcQuantity" placeholder="Введите количество">
+            </div>
+            <div>
+                <label for="calcPrice">Текущая цена (USD):</label>
+                <input type="number" id="calcPrice" placeholder="Введите текущую цену">
+            </div>
+            <button onclick="calculateBTC()">Рассчитать</button>
+            <p id="calcResult">Общая стоимость: $0</p>
+        </section>
     </main>
 
     <footer>
