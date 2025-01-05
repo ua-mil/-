@@ -1,39 +1,8 @@
-// Сохранение профиля
-function saveProfile() {
-    const username = document.getElementById('username').value;
-
-    if (!username) {
-        alert('Введите имя пользователя.');
-        return;
-    }
-
-    localStorage.setItem('username', username);
-    document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('portfolio').style.display = 'block';
-
-    loadPortfolio();
-}
-
-// Загрузка профиля
-function loadProfile() {
-    const username = localStorage.getItem('username');
-
-    if (username) {
-        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
-        document.getElementById('profile').style.display = 'none';
-        document.getElementById('portfolio').style.display = 'block';
-
-        loadPortfolio();
-    }
-}
 const CHART_API_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24';
-
-// Настройка графика
 const ctx = document.getElementById('btcChart').getContext('2d');
 let btcChart;
 
-// Функция для загрузки данных и отображения графика
+// Функция для загрузки данных и построения графика
 async function loadChartData() {
     try {
         const response = await fetch(CHART_API_URL);
@@ -44,19 +13,20 @@ async function loadChartData() {
 
         const data = await response.json();
 
-        // Подготавливаем данные для графика
+        // Преобразование данных
         const labels = data.map(item => {
             const date = new Date(item[0]);
-            return `${date.getHours()}:00`;
+            return `${date.getHours()}:00`; // Время
         });
 
-        const prices = data.map(item => parseFloat(item[4])); // Закрытие цены
+        const prices = data.map(item => parseFloat(item[4])); // Цена закрытия
 
-        // Создаем график
+        // Удаляем предыдущий график, если он существует
         if (btcChart) {
             btcChart.destroy();
         }
 
+        // Создаем новый график
         btcChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -66,54 +36,40 @@ async function loadChartData() {
                     data: prices,
                     borderColor: '#ffd700',
                     backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                    tension: 0.2,
+                    tension: 0.3,
                 }],
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'top',
                         labels: {
-                            color: '#f9f9f9',
-                        }
-                    }
+                            color: '#000',
+                        },
+                    },
                 },
                 scales: {
                     x: {
                         ticks: {
-                            color: '#f9f9f9',
-                        }
+                            color: '#000',
+                        },
                     },
                     y: {
                         ticks: {
-                            color: '#f9f9f9',
-                        }
-                    }
-                }
-            }
+                            color: '#000',
+                        },
+                    },
+                },
+            },
         });
     } catch (error) {
         console.error('Ошибка загрузки данных для графика:', error);
     }
 }
 
-// Загружаем данные графика при загрузке страницы
-window.onload = () => {
-    fetchBitcoinPrice(); // Обновляем цену
-    loadChartData(); // Загружаем график
-
-    // Автообновление каждые 60 секунд
-    setInterval(loadChartData, 60000);
-};
-
-// Получение текущей цены Биткойна
-// URL API Binance для получения текущей цены BTC/USDT
-const BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
-
 // Функция для получения текущей цены Bitcoin
 async function fetchBitcoinPrice() {
+    const BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
     try {
         const response = await fetch(BINANCE_API_URL);
 
@@ -147,99 +103,42 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 }
 
-// Автоматически вызываем fetchBitcoinPrice при загрузке страницы
-window.onload = () => {
-    fetchBitcoinPrice();
-
-    // Автообновление цены каждые 60 секунд
-    setInterval(fetchBitcoinPrice, 60000);
-};
-
-// Сохранение данных портфеля
-async function updatePortfolio() {
-    const quantity = parseFloat(document.getElementById('btcQuantity').value);
-    const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value);
-    const currentPrice = await fetchCurrentPrice();
-
-    if (isNaN(quantity) || isNaN(purchasePrice) || currentPrice === null) {
-        alert('Пожалуйста, введите корректные данные.');
-        return;
-    }
-
-    const total = quantity * currentPrice;
-    const profit = total - (quantity * purchasePrice);
-
-    document.getElementById('btcTotal').textContent = total.toFixed(2);
-    document.getElementById('btcProfit').textContent = profit.toFixed(2);
-
-    // Сохранение данных в localStorage
-    const portfolioData = { quantity, purchasePrice };
-    localStorage.setItem('portfolio', JSON.stringify(portfolioData));
-}
-
-// Загрузка данных портфеля
-function loadPortfolio() {
-    const portfolioData = JSON.parse(localStorage.getItem('portfolio'));
-
-    if (portfolioData) {
-        document.getElementById('btcQuantity').value = portfolioData.quantity;
-        document.getElementById('btcPurchasePrice').value = portfolioData.purchasePrice;
-        updatePortfolio();
+// Сохраняем профиль пользователя в localStorage
+function saveProfile() {
+    const username = document.getElementById('username').value.trim();
+    if (username) {
+        localStorage.setItem('username', username);
+        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
+    } else {
+        alert('Введите имя пользователя.');
     }
 }
 
-// Загрузка профиля при запуске
-window.onload = loadProfile;
-// Калькулятор Биткойн
+// Загружаем данные профиля при загрузке страницы
+function loadProfile() {
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('username').value = username;
+        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
+    }
+}
+
+// Калькулятор Bitcoin
 function calculateBTC() {
-    const quantity = parseFloat(document.getElementById('calcQuantity').value);
-    const price = parseFloat(document.getElementById('calcPrice').value);
-
-    if (isNaN(quantity) || isNaN(price)) {
-        alert('Введите корректные данные.');
-        return;
-    }
-
+    const quantity = parseFloat(document.getElementById('calcQuantity').value) || 0;
+    const price = parseFloat(document.getElementById('calcPrice').value) || 0;
     const total = quantity * price;
+
     document.getElementById('calcResult').textContent = `Общая стоимость: $${total.toFixed(2)}`;
 }
 
-// Показывать калькулятор после входа
-function showCalculator() {
-    document.getElementById('calculator').style.display = 'block';
-}
+// Загружаем профиль и данные графика при старте
+window.onload = () => {
+    loadProfile();
+    fetchBitcoinPrice();
+    loadChartData();
 
-// Модифицированный saveProfile
-function saveProfile() {
-    const username = document.getElementById('username').value;
-
-    if (!username) {
-        alert('Введите имя пользователя.');
-        return;
-    }
-
-    localStorage.setItem('username', username);
-    document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('portfolio').style.display = 'block';
-    showCalculator(); // Показываем калькулятор
-
-    loadPortfolio();
-}
-
-// Модифицированный loadProfile
-function loadProfile() {
-    const username = localStorage.getItem('username');
-
-    if (username) {
-        document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
-        document.getElementById('profile').style.display = 'none';
-        document.getElementById('portfolio').style.display = 'block';
-        showCalculator(); // Показываем калькулятор
-
-        loadPortfolio();
-    }
-}
-
-// Вызов при загрузке страницы
-window.onload = loadProfile;
+    // Автообновление данных каждые 60 секунд
+    setInterval(loadChartData, 60000);
+    setInterval(fetchBitcoinPrice, 60000);
+};
