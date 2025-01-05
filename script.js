@@ -104,22 +104,41 @@ function updatePortfolioCalculations(currentPrice) {
 }
 
 // Сохраняем профиль пользователя в localStorage
+// Функция для сохранения профиля
 function saveProfile() {
     const username = document.getElementById('username').value.trim();
     if (username) {
         localStorage.setItem('username', username);
         document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
+
+        // Показываем портфель и скрываем профиль
+        document.getElementById('profile').classList.add('hidden');
+        document.getElementById('portfolioPage').classList.remove('hidden');
+
+        // Загружаем данные
+        fetchBitcoinPrice();
+        loadChartData();
     } else {
         alert('Введите имя пользователя.');
     }
 }
 
-// Загружаем данные профиля при загрузке страницы
+// Функция для загрузки профиля
 function loadProfile() {
     const username = localStorage.getItem('username');
     if (username) {
-        document.getElementById('username').value = username;
+        // Если пользователь существует, показываем портфель
+        document.getElementById('profile').classList.add('hidden');
+        document.getElementById('portfolioPage').classList.remove('hidden');
         document.getElementById('welcomeMessage').textContent = `Добро пожаловать, ${username}!`;
+
+        // Загружаем данные
+        fetchBitcoinPrice();
+        loadChartData();
+    } else {
+        // Если профиля нет, показываем блок "Создайте профиль"
+        document.getElementById('profile').classList.remove('hidden');
+        document.getElementById('portfolioPage').classList.add('hidden');
     }
 }
 
