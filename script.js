@@ -60,32 +60,20 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 }
 
-// Сохранение данных портфеля
-function savePortfolioEntry() {
-    const quantity = parseFloat(document.getElementById('btcQuantity').value) || 0;
-    const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value) || 0;
+// Сохранение прибыли
+function saveProfit() {
+    const currentProfit = parseFloat(document.getElementById('btcProfit').textContent.replace('$', '')) || 0;
+    totalProfit += currentProfit;
 
-    const currentPrice = parseFloat(document.getElementById('btcCurrentPrice').textContent.replace('$', '')) || 0;
-    const totalValue = quantity * currentPrice;
-    const profit = totalValue - quantity * purchasePrice;
-
-    totalProfit += profit;
-
-    localStorage.setItem('portfolio', JSON.stringify({
-        totalProfit,
-        entries: [{ quantity, purchasePrice, currentPrice, profit }]
-    }));
-
+    localStorage.setItem('totalProfit', totalProfit);
     document.getElementById('totalProfit').textContent = `$${totalProfit.toFixed(2)}`;
 }
 
-// Загрузка сохраненных данных
-function loadSavedPortfolio() {
-    const savedData = JSON.parse(localStorage.getItem('portfolio'));
-    if (savedData) {
-        totalProfit = savedData.totalProfit || 0;
-        document.getElementById('totalProfit').textContent = `$${totalProfit.toFixed(2)}`;
-    }
+// Загрузка сохраненной прибыли
+function loadSavedProfit() {
+    const savedProfit = parseFloat(localStorage.getItem('totalProfit')) || 0;
+    totalProfit = savedProfit;
+    document.getElementById('totalProfit').textContent = `$${totalProfit.toFixed(2)}`;
 }
 
 // Калькулятор
@@ -102,6 +90,7 @@ function login() {
     const email = document.getElementById('email').value.trim();
     if (!email) return alert('Введите Email');
 
+    localStorage.setItem('loggedIn', true);
     document.getElementById('login').classList.add('hidden');
     document.getElementById('chartSection').classList.remove('hidden');
     document.getElementById('portfolioPage').classList.remove('hidden');
@@ -109,13 +98,29 @@ function login() {
 
     fetchBitcoinPrice();
     loadChartData();
-    loadSavedPortfolio();
+    loadSavedProfit();
+}
+
+// Проверка состояния входа
+function checkLoginStatus() {
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn) {
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('chartSection').classList.remove('hidden');
+        document.getElementById('portfolioPage').classList.remove('hidden');
+        document.getElementById('calculatorPage').classList.remove('hidden');
+
+        fetchBitcoinPrice();
+        loadChartData();
+        loadSavedProfit();
+    } else {
+        document.getElementById('login').classList.remove('hidden');
+    }
 }
 
 // Загрузка данных при старте
 window.onload = () => {
-    fetchBitcoinPrice();
-    loadChartData();
+    checkLoginStatus();
     setInterval(fetchBitcoinPrice, 60000);
     setInterval(loadChartData, 60000);
 };
