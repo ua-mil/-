@@ -1,100 +1,54 @@
-const CHART_API_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24';
 const BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+const CHART_API_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24';
 let btcChart;
-const ctx = document.getElementById('btcChart').getContext('2d');
 
-// Вхід до системи
-function login() {
-    const email = document.getElementById('email').value.trim();
-    if (email) {
-        localStorage.setItem('email', email);
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('chartSection').classList.remove('hidden');
-        document.getElementById('portfolioPage').classList.remove('hidden');
-        document.getElementById('calculatorPage').classList.remove('hidden');
-        loadPortfolioData();
-        loadChartData();
-        fetchBitcoinPrice();
-    } else {
-        alert('Введіть Email для входу.');
-    }
-}
-
-// Завантаження графіку ціни Bitcoin
+// Завантаження даних графіка
 async function loadChartData() {
     try {
         const response = await fetch(CHART_API_URL);
-        if (!response.ok) throw new Error(`Помилка API Binance: ${response.statusText}`);
-
         const data = await response.json();
-        const labels = data.map(item => {
-            const date = new Date(item[0]);
-            return `${date.getHours()}:00`;
-        });
+
+        const labels = data.map(item => new Date(item[0]).toLocaleTimeString());
         const prices = data.map(item => parseFloat(item[4]));
 
         if (btcChart) btcChart.destroy();
 
-        btcChart = new Chart(ctx, {
+        btcChart = new Chart(document.getElementById('btcChart'), {
             type: 'line',
             data: {
-                labels: labels,
+                labels,
                 datasets: [{
                     label: 'Ціна BTC (USD)',
                     data: prices,
                     borderColor: '#ffd700',
                     backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                    tension: 0.3,
-                }],
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#fff',
-                        },
-                    },
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#fff',
-                        },
-                    },
-                    y: {
-                        ticks: {
-                            color: '#fff',
-                        },
-                    },
-                },
-            },
+                    tension: 0.4
+                }]
+            }
         });
     } catch (error) {
-        console.error('Помилка завантаження графіку:', error);
+        console.error('Помилка завантаження графіка:', error);
     }
 }
 
-// Отримання поточної ціни Bitcoin
+// Оновлення поточної ціни
 async function fetchBitcoinPrice() {
     try {
         const response = await fetch(BINANCE_API_URL);
-        if (!response.ok) throw new Error(`Помилка API Binance: ${response.statusText}`);
-
         const data = await response.json();
-        const btcPrice = parseFloat(data.price).toFixed(2);
-        document.getElementById('btcCurrentPrice').textContent = `$${btcPrice}`;
-        updatePortfolioCalculations(btcPrice);
+        const currentPrice = parseFloat(data.price).toFixed(2);
+
+        document.getElementById('btcCurrentPrice').textContent = `$${currentPrice}`;
+        updatePortfolioCalculations(currentPrice);
     } catch (error) {
-        console.error('Помилка отримання ціни Bitcoin:', error);
-        document.getElementById('btcCurrentPrice').textContent = 'Помилка завантаження';
+        console.error('Помилка оновлення ціни:', error);
     }
 }
 
-// Оновлення розрахунків портфеля
+// Розрахунки портфеля
 function updatePortfolioCalculations(currentPrice) {
-    const quantity = parseFloat(document.getElementById('btcQuantity').value) || 0;
-    const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value) || 0;
+    const quantity = parseFloat(localStorage.getItem('btcQuantity') || 0);
+    const purchasePrice = parseFloat(localStorage.getItem('btcPurchasePrice') || 0);
 
     const totalValue = quantity * currentPrice;
     const profit = totalValue - quantity * purchasePrice;
@@ -103,62 +57,63 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 }
 
-// Збереження даних портфеля
-function savePortfolioData() {
-    const email = localStorage.getItem('email');
-    const quantity = document.getElementById('btcQuantity').value;
-    const purchasePrice = document.getElementById('btcPurchasePrice').value;
-
-    const portfolio = { quantity, purchasePrice };
-    localStorage.setItem(`portfolio_${email}`, JSON.stringify(portfolio));
+// Збереження прибутку
+function saveProfit() {
+    const profit = parseFloat(document.getElementById('btcProfit').textContent.slice(1)) || 0;
+    const savedProfit = parseFloat(localStorage.getItem('savedProfit') || 0);
+    localStorage.setItem('savedProfit', savedProfit + profit);
+    document.getElementById('savedProfit').textContent = `$${(savedProfit + profit).toFixed(2)}`;
 }
 
-// Завантаження даних портфеля
-function loadPortfolioData() {
-    const email = localStorage.getItem('email');
-    const portfolio = JSON.parse(localStorage.getItem(`portfolio_${email}`));
-    if (portfolio) {
-        document.getElementById('btcQuantity').value = portfolio.quantity || '';
-        document.getElementById('btcPurchasePrice').value = portfolio.purchasePrice || '';
+// Очищення портфеля
+function clearPortfolio() {
+    localStorage.removeItem('btcQuantity');
+    localStorage.removeItem('btcPurchasePrice');
+    localStorage.removeItem('savedProfit');
+    document.getElementById('btcQuantity').value = '';
+    document.getElementById('btcPurchasePrice').value = '';
+    document.getElementById('savedProfit').textContent = '$0';
+}
+
+// Збереження даних профілю
+function saveProfile() {
+    const email = document.getElementById('email').value.trim();
+    if (email) {
+        localStorage.setItem('email', email);
+        document.getElementById('profile').classList.add('d-none');
+        document.getElementById('portfolio').classList.remove('d-none');
+        document.getElementById('calculator').classList.remove('d-none');
+        loadSavedData();
+    } else {
+        alert('Введіть ваш Email!');
     }
 }
 
-// Автоматичне збереження даних при зміні
-document.getElementById('btcQuantity').addEventListener('input', savePortfolioData);
-document.getElementById('btcPurchasePrice').addEventListener('input', savePortfolioData);
-
-// Збереження прибутку
-function saveProfit() {
-    const profit = parseFloat(document.getElementById('btcProfit').textContent.replace('$', '')) || 0;
-    const email = localStorage.getItem('email');
-    let totalProfit = parseFloat(localStorage.getItem(`profit_${email}`)) || 0;
-
-    totalProfit += profit;
-    localStorage.setItem(`profit_${email}`, totalProfit.toFixed(2));
-    alert(`Загальний прибуток збережено: $${totalProfit.toFixed(2)}`);
+// Завантаження збережених даних
+function loadSavedData() {
+    document.getElementById('btcQuantity').value = localStorage.getItem('btcQuantity') || '';
+    document.getElementById('btcPurchasePrice').value = localStorage.getItem('btcPurchasePrice') || '';
+    document.getElementById('savedProfit').textContent = `$${localStorage.getItem('savedProfit') || 0}`;
 }
 
-// Калькулятор Bitcoin
+// Калькулятор
 function calculateBTC() {
     const quantity = parseFloat(document.getElementById('calcQuantity').value) || 0;
     const price = parseFloat(document.getElementById('calcPrice').value) || 0;
-    const total = quantity * price;
-    document.getElementById('calcResult').textContent = `Загальна вартість: $${total.toFixed(2)}`;
+    document.getElementById('calcResult').textContent = `Загальна вартість: $${(quantity * price).toFixed(2)}`;
 }
 
-// Завантаження початкових даних
+// Ініціалізація
 window.onload = () => {
     const email = localStorage.getItem('email');
     if (email) {
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('chartSection').classList.remove('hidden');
-        document.getElementById('portfolioPage').classList.remove('hidden');
-        document.getElementById('calculatorPage').classList.remove('hidden');
-        loadPortfolioData();
-        loadChartData();
-        fetchBitcoinPrice();
+        document.getElementById('profile').classList.add('d-none');
+        document.getElementById('portfolio').classList.remove('d-none');
+        document.getElementById('calculator').classList.remove('d-none');
+        loadSavedData();
     }
-
+    loadChartData();
+    fetchBitcoinPrice();
     setInterval(loadChartData, 60000);
     setInterval(fetchBitcoinPrice, 60000);
 };
