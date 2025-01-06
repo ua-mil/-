@@ -14,7 +14,7 @@
 
     <main>
         <!-- Логин -->
-        <section id="login">
+        <section id="login" class="hidden">
             <h2>Вход</h2>
             <div>
                 <label for="email">Введите ваш Email:</label>
@@ -24,13 +24,13 @@
         </section>
 
         <!-- График -->
-        <section id="chartSection" class="hidden">
+        <section id="chartSection">
             <h2>График цены Bitcoin</h2>
             <canvas id="btcChart" width="400" height="200"></canvas>
         </section>
 
         <!-- Портфель -->
-        <section id="portfolioPage" class="hidden">
+        <section id="portfolioPage">
             <h2>Мой Портфель</h2>
             <div>
                 <label for="btcQuantity">Количество BTC:</label>
@@ -53,14 +53,14 @@
                 <p id="btcProfit">0</p>
             </div>
             <div>
-                <label>Общий доход (USD):</label>
+                <label>Сохранённая прибыль (USD):</label>
                 <p id="totalProfit">0</p>
             </div>
-            <button onclick="savePortfolioEntry()">Сохранить данные</button>
+            <button onclick="saveProfit()">Сохранить прибыль</button>
         </section>
 
         <!-- Калькулятор -->
-        <section id="calculatorPage" class="hidden">
+        <section id="calculatorPage">
             <h2>Калькулятор Bitcoin</h2>
             <div>
                 <label for="calcQuantity">Количество BTC:</label>
