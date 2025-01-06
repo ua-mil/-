@@ -8,17 +8,18 @@ function loadProfile() {
     if (email) {
         document.getElementById('profileSection').classList.add('d-none');
         document.getElementById('portfolioSection').classList.remove('d-none');
+        loadPortfolioData(); // Завантаження даних портфеля
     } else {
         document.getElementById('profileSection').classList.remove('d-none');
         document.getElementById('portfolioSection').classList.add('d-none');
     }
 }
 
-// Збереження профілю
-function saveProfile() {
+// Вхід до профілю
+function loginProfile() {
     const email = document.getElementById('email').value.trim();
     if (email) {
-        localStorage.setItem('email', email);
+        localStorage.setItem('email', email); // Збереження електронної пошти
         loadProfile();
     } else {
         alert('Введіть електронну пошту.');
@@ -34,7 +35,14 @@ function loadPortfolioData() {
 }
 
 // Збереження даних портфеля
-function savePortfolioData(quantity, purchasePrice, profit) {
+function savePortfolioData() {
+    const quantity = parseFloat(document.getElementById('btcQuantity').value) || 0;
+    const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value) || 0;
+    const currentPrice = parseFloat(document.getElementById('btcCurrentPrice').textContent.replace('$', '')) || 0;
+
+    const totalValue = quantity * currentPrice;
+    const profit = totalValue - quantity * purchasePrice;
+
     const portfolioData = { quantity, purchasePrice, profit };
     localStorage.setItem('portfolio', JSON.stringify(portfolioData));
 }
@@ -50,7 +58,7 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcTotal').textContent = `$${totalValue.toFixed(2)}`;
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 
-    savePortfolioData(quantity, purchasePrice, profit);
+    savePortfolioData(); // Збереження даних після оновлення
 }
 
 // Отримання ціни Bitcoin
@@ -104,12 +112,25 @@ function clearPortfolioData() {
     document.getElementById('btcTotal').textContent = '$0.00';
 }
 
-// Ініціалізація
+// Існуючий код (не змінюється)
+
+// Функція для розрахунків у калькуляторі
+function calculateBTC() {
+    const quantity = parseFloat(document.getElementById('calcQuantity').value) || 0;
+    const price = parseFloat(document.getElementById('calcPrice').value) || 0;
+    const total = quantity * price;
+
+    document.getElementById('calcResult').textContent = `Загальна вартість: $${total.toFixed(2)}`;
+}
+
+// Оновлення ініціалізації при завантаженні сторінки
 window.onload = () => {
     loadProfile();
-    loadPortfolioData();
     fetchBitcoinPrice();
     loadChartData();
     setInterval(fetchBitcoinPrice, 60000);
     setInterval(loadChartData, 60000);
+
+    document.getElementById('btcQuantity').addEventListener('input', savePortfolioData);
+    document.getElementById('btcPurchasePrice').addEventListener('input', savePortfolioData);
 };
