@@ -60,24 +60,23 @@ function updatePortfolioCalculations(currentPrice) {
     document.getElementById('btcProfit').textContent = `$${profit.toFixed(2)}`;
 }
 
-// Сохранение данных портфеля
+// Сохранение данных в localStorage
 function savePortfolioData() {
     const quantity = parseFloat(document.getElementById('btcQuantity').value) || 0;
     const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value) || 0;
 
     localStorage.setItem('btcQuantity', quantity);
     localStorage.setItem('btcPurchasePrice', purchasePrice);
-
-    alert('Данные портфеля сохранены!');
 }
 
-// Загрузка данных портфеля
+// Загрузка данных из localStorage
 function loadPortfolioData() {
     const quantity = parseFloat(localStorage.getItem('btcQuantity')) || 0;
     const purchasePrice = parseFloat(localStorage.getItem('btcPurchasePrice')) || 0;
 
     document.getElementById('btcQuantity').value = quantity;
     document.getElementById('btcPurchasePrice').value = purchasePrice;
+    updatePortfolioCalculations(fetchBitcoinPrice());
 }
 
 // Сохранение прибыли
@@ -140,9 +139,15 @@ function checkLoginStatus() {
     }
 }
 
-// Загрузка данных при старте
+// Проверка входа при загрузке
 window.onload = () => {
     checkLoginStatus();
     setInterval(fetchBitcoinPrice, 60000);
     setInterval(loadChartData, 60000);
+
+    // Автосохранение данных при изменении значений
+    document.getElementById('btcQuantity').addEventListener('input', savePortfolioData);
+    document.getElementById('btcPurchasePrice').addEventListener('input', savePortfolioData);
+    document.getElementById('calcQuantity').addEventListener('input', calculateBTC);
+    document.getElementById('calcPrice').addEventListener('input', calculateBTC);
 };
