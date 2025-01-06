@@ -65,11 +65,27 @@ function savePortfolioEntry() {
     const quantity = parseFloat(document.getElementById('btcQuantity').value) || 0;
     const purchasePrice = parseFloat(document.getElementById('btcPurchasePrice').value) || 0;
 
-    const entry = { quantity, purchasePrice };
-    localStorage.setItem('portfolio', JSON.stringify(entry));
+    const currentPrice = parseFloat(document.getElementById('btcCurrentPrice').textContent.replace('$', '')) || 0;
+    const totalValue = quantity * currentPrice;
+    const profit = totalValue - quantity * purchasePrice;
 
-    totalProfit += quantity * purchasePrice;
+    totalProfit += profit;
+
+    localStorage.setItem('portfolio', JSON.stringify({
+        totalProfit,
+        entries: [{ quantity, purchasePrice, currentPrice, profit }]
+    }));
+
     document.getElementById('totalProfit').textContent = `$${totalProfit.toFixed(2)}`;
+}
+
+// Загрузка сохраненных данных
+function loadSavedPortfolio() {
+    const savedData = JSON.parse(localStorage.getItem('portfolio'));
+    if (savedData) {
+        totalProfit = savedData.totalProfit || 0;
+        document.getElementById('totalProfit').textContent = `$${totalProfit.toFixed(2)}`;
+    }
 }
 
 // Калькулятор
@@ -93,12 +109,7 @@ function login() {
 
     fetchBitcoinPrice();
     loadChartData();
-
-    const savedData = JSON.parse(localStorage.getItem('portfolio'));
-    if (savedData) {
-        document.getElementById('btcQuantity').value = savedData.quantity;
-        document.getElementById('btcPurchasePrice').value = savedData.purchasePrice;
-    }
+    loadSavedPortfolio();
 }
 
 // Загрузка данных при старте
