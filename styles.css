@@ -1,70 +1,47 @@
+/* Загальний стиль */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #121212;
-    color: white;
+    color: #ffffff;
     margin: 0;
     padding: 0;
-    text-align: center;
 }
 
 header {
-    background-color: #333;
-    padding: 20px 0;
-}
-
-h1 {
-    margin: 0;
-}
-
-main {
-    padding: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-section {
-    margin: 20px 0;
-}
-
-label, p {
-    display: block;
-    margin: 10px 0;
-}
-
-input {
+    background-color: #ffc107;
     padding: 10px;
-    font-size: 16px;
-    width: 100%;
-    max-width: 300px;
-    margin: 10px 0;
-    background-color: #333;
-    border: 1px solid #444;
-    color: white;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #ffd700;
-    border: none;
+    text-align: center;
     color: #121212;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #ffa500;
 }
 
 footer {
-    background-color: #333;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    background-color: #1c1c1c;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
 }
 
-canvas {
-    width: 100%;
-    height: auto;
+button {
+    margin: 10px 0;
+}
+
+button.btn-refresh {
+    background-color: #ffc107;
+    color: #121212;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+button.btn-refresh:hover {
+    background-color: #e0a800;
+}
+
+#btcProfit.negative {
+    color: #dc3545;
+}
+
+/* Відступи для таблиці */
+.vertical-table div {
+    margin-bottom: 15px;
 }
