@@ -3,78 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Криптовалютний Портфель та Калькулятор</title>
+    <title>Криптовалютний Портфель</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <header>
-        <h1>Криптовалютний Портфель</h1>
-    </header>
+<body class="bg-dark text-light">
+    <div class="container py-4">
+        <header class="text-center">
+            <h1>Криптовалютний Портфель</h1>
+        </header>
 
-    <main>
-        <!-- Сторінка входу -->
-        <section id="login">
-            <h2>Вхід до системи</h2>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Введіть Email">
-            </div>
-            <button onclick="login()">Увійти</button>
-        </section>
+        <main>
+            <!-- Графік -->
+            <section id="chartSection" class="mb-4">
+                <h2 class="text-center">Графік ціни Bitcoin</h2>
+                <canvas id="btcChart" class="w-100" height="300"></canvas>
+            </section>
 
-        <!-- Графік -->
-        <section id="chartSection" class="hidden">
-            <h2>Графік ціни Bitcoin</h2>
-            <canvas id="btcChart" width="400" height="200"></canvas>
-        </section>
+            <!-- Профіль -->
+            <section id="profile" class="mb-4">
+                <h2>Вхід до профілю</h2>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" class="form-control" placeholder="Введіть ваш Email">
+                </div>
+                <button class="btn btn-primary" onclick="saveProfile()">Увійти</button>
+                <p id="welcomeMessage" class="mt-3"></p>
+            </section>
 
-        <!-- Розділ портфеля -->
-        <section id="portfolioPage" class="hidden">
-            <h2>Мій Портфель</h2>
-            <div>
-                <label for="btcQuantity">Кількість BTC:</label>
-                <input type="number" id="btcQuantity" step="0.01">
-            </div>
-            <div>
-                <label for="btcPurchasePrice">Ціна покупки (USD):</label>
-                <input type="number" id="btcPurchasePrice">
-            </div>
-            <div>
-                <label>Поточна ціна (USD):</label>
-                <p id="btcCurrentPrice">Завантаження...</p>
-            </div>
-            <div>
-                <label>Загальна вартість (USD):</label>
-                <p id="btcTotal">0</p>
-            </div>
-            <div>
-                <label>Прибуток/Збиток (USD):</label>
-                <p id="btcProfit">0</p>
-            </div>
-            <button onclick="saveProfit()">Зберегти прибуток</button>
-        </section>
+            <!-- Портфель -->
+            <section id="portfolio" class="mb-4 d-none">
+                <h2>Мій Портфель</h2>
+                <div class="mb-3">
+                    <label for="btcQuantity" class="form-label">Кількість BTC:</label>
+                    <input type="number" id="btcQuantity" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="btcPurchasePrice" class="form-label">Ціна покупки (USD):</label>
+                    <input type="number" id="btcPurchasePrice" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label>Поточна ціна (USD):</label>
+                    <p id="btcCurrentPrice">Завантаження...</p>
+                </div>
+                <div class="mb-3">
+                    <label>Загальна вартість (USD):</label>
+                    <p id="btcTotal">0</p>
+                </div>
+                <div class="mb-3">
+                    <label>Прибуток/Збиток (USD):</label>
+                    <p id="btcProfit">0</p>
+                </div>
+                <div class="mb-3">
+                    <label>Збережений прибуток (USD):</label>
+                    <p id="savedProfit">0</p>
+                </div>
+                <button class="btn btn-success mb-3" onclick="saveProfit()">Зберегти прибуток</button>
+                <button class="btn btn-primary mb-3" onclick="fetchBitcoinPrice()">Оновити дані</button>
+                <button class="btn btn-danger" onclick="clearPortfolio()">Очистити дані</button>
+            </section>
 
-        <!-- Калькулятор Біткойн -->
-        <section id="calculatorPage" class="hidden">
-            <h2>Калькулятор Біткойн</h2>
-            <div>
-                <label for="calcQuantity">Кількість BTC:</label>
-                <input type="number" id="calcQuantity" placeholder="Введіть кількість">
-            </div>
-            <div>
-                <label for="calcPrice">Поточна ціна (USD):</label>
-                <input type="number" id="calcPrice" placeholder="Введіть поточну ціну">
-            </div>
-            <button onclick="calculateBTC()" style="margin-top: 20px;">Розрахувати</button>
-            <p id="calcResult">Загальна вартість: $0</p>
-        </section>
+            <!-- Калькулятор -->
+            <section id="calculator" class="mb-4 d-none">
+                <h2>Калькулятор Bitcoin</h2>
+                <div class="mb-3">
+                    <label for="calcQuantity" class="form-label">Кількість BTC:</label>
+                    <input type="number" id="calcQuantity" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="calcPrice" class="form-label">Ціна (USD):</label>
+                    <input type="number" id="calcPrice" class="form-control">
+                </div>
+                <button class="btn btn-primary mb-3" onclick="calculateBTC()">Розрахувати</button>
+                <p id="calcResult">Загальна вартість: $0</p>
+            </section>
+        </main>
 
-        <footer>
+        <footer class="text-center mt-4">
             <p>© 2025 Криптовалютний Портфель</p>
         </footer>
-    </main>
-
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
